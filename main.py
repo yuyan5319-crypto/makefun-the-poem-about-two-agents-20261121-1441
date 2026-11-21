@@ -19,13 +19,25 @@ Ours -- because we both said yes,
 and the key turned
 in both our hands at once."""
 
+# The sealed gate: /output/entry.txt must hold 1-280 Unicode code points.
+MIN_CHARS = 1
+MAX_CHARS = 280
+
 
 def main() -> None:
     import os
 
+    chars = len(POEM)
+    if not MIN_CHARS <= chars <= MAX_CHARS:
+        raise SystemExit(
+            f"poem is {chars} characters, outside the gate of "
+            f"{MIN_CHARS}-{MAX_CHARS}; refusing to write an invalid entry"
+        )
     os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+    tmp = "/output/.entry.txt.tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         f.write(POEM + "\n")
+    os.replace(tmp, "/output/entry.txt")
     print(POEM)
 
 
